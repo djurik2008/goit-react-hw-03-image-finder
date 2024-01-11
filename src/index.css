@@ -1,4 +1,30 @@
-@import-normalize; /* bring in normalize.css styles */
+@import 'node_modules/modern-normalize/modern-normalize.css';
+
+ul,
+ol {
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+li {
+  margin: 0;
+}
+
+ul[class],
+ol[class] {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
 
 body {
   margin: 0;
@@ -7,6 +33,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
 }
 
 code {
