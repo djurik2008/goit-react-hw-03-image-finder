@@ -39,6 +39,7 @@ class FinderForm extends Component {
           onChange={handleChange}
           value={search}
           name="search"
+          required
         />
       </form>
     );
