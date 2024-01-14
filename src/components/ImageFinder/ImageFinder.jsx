@@ -14,6 +14,7 @@ class ImageFinder extends Component {
     search: '',
     images: [],
     loading: false,
+    loadMoreBtn: false,
     error: null,
     page: 1,
     modalOpen: false,
@@ -35,11 +36,17 @@ class ImageFinder extends Component {
         loading: true,
       });
       const {
-        data: { hits },
+        data: { hits, totalHits },
       } = await searchImages(search, page);
       this.setState(({ images }) => ({
         images: hits?.length ? [...images, ...hits] : images,
       }));
+      const loadedImages = page * 12;
+      if (loadedImages >= totalHits) {
+        this.setState({ loadMoreBtn: false });
+        return;
+      }
+      this.setState({ loadMoreBtn: true });
     } catch (error) {
       this.setState({
         error: error.message,
@@ -52,6 +59,9 @@ class ImageFinder extends Component {
   }
 
   handleSearch = ({ search }) => {
+    if (search === this.state.search) {
+      return;
+    }
     this.setState({
       search,
       images: [],
@@ -80,8 +90,15 @@ class ImageFinder extends Component {
 
   render() {
     const { handleSearch, loadMore, showModal, closeModal } = this;
-    const { images, loading, error, modalOpen, largeImageURL, alt } =
-      this.state;
+    const {
+      images,
+      loading,
+      error,
+      modalOpen,
+      largeImageURL,
+      alt,
+      loadMoreBtn,
+    } = this.state;
     const isImages = Boolean(images.length);
     return (
       <>
@@ -94,16 +111,16 @@ class ImageFinder extends Component {
             <ImageGalleryItem items={images} showModal={showModal} />
           </ImageGallery>
         )}
-        {isImages && (
+        {loading && (
+          <div className={css.loader}>
+            <Loader />
+          </div>
+        )}
+        {isImages && loadMoreBtn && (
           <div className={css.loadMoreContainer}>
             <Button onClick={loadMore} type="button">
               Load more
             </Button>
-          </div>
-        )}
-        {loading && (
-          <div className={css.loader}>
-            <Loader />
           </div>
         )}
         {modalOpen && (
